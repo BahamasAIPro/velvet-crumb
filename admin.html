@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velvet Crumb – Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<style>
+:root{
+  --bg:#0f0808;
+  --surface:#1a1010;
+  --card:#231414;
+  --border:rgba(255,255,255,0.08);
+  --blush:#c9a09a;
+  --rose:#a0645e;
+  --gold:#c9a96e;
+  --green:#6b9e7a;
+  --blue:#6b8ea0;
+  --amber:#c9a040;
+  --white:#ffffff;
+  --muted:rgba(255,255,255,0.45);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--white);font-family:'Jost',sans-serif;min-height:100vh;}
+
+/* ── GATE ── */
+#gate{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#0f0808,#1f0e0e);
+}
+.gate-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:48px 40px;width:100%;max-width:380px;text-align:center;
+}
+.gate-logo{
+  font-family:'Cormorant Garamond',serif;font-size:28px;
+  letter-spacing:4px;color:var(--white);margin-bottom:4px;
+}
+.gate-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blush);margin-bottom:36px;}
+.gate-box input{
+  width:100%;padding:13px 16px;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:4px;color:var(--white);
+  font-family:'Jost',sans-serif;font-size:15px;outline:none;margin-bottom:14px;
+  transition:border-color 0.2s;
+}
+.gate-box input:focus{border-color:var(--blush);}
+.gate-btn{
+  width:100%;background:var(--rose);color:var(--white);border:none;
+  padding:14px;border-radius:4px;font-family:'Jost',sans-serif;font-size:11px;
+  font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;
+  transition:background 0.2s;
+}
+.gate-btn:hover{background:#8a5450;}
+.gate-err{color:#e07070;font-size:12px;margin-top:10px;display:none;}
+
+/* ── LAYOUT ── */
+#dashboard{display:none;}
+nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:3px;}
+.nav-right{display:flex;align-items:center;gap:20px;}
+.nav-tab{
+  background:none;border:none;color:var(--muted);font-family:'Jost',sans-serif;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+  padding:6px 0;border-bottom:2px solid transparent;transition:all 0.2s;
+}
+.nav-tab.active{color:var(--white);border-bottom-color:var(--blush);}
+.logout-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  font-family:'Jost',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;padding:7px 16px;border-radius:4px;transition:all 0.2s;
+}
+.logout-btn:hover{border-color:var(--blush);color:var(--blush);}
+
+.main{max-width:1100px;margin:0 auto;padding:40px 24px;}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:40px;}
+.stat{
+  background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:20px 24px;
+}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--white);}
+.stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+
+/* ── SECTION PANELS ── */
+.panel{display:none;}
+.panel.active{display:block;}
+
+.panel-title{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;
+  margin-bottom:24px;color:var(--white);
+}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+.filter-btn{
+  background:var(--surface);border:1px solid var(--border);color:var(--muted);
+  font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;padding:7px 16px;border-radius:20px;transition:all 0.2s;
+}
+.filter-btn.active{background:var(--rose);border-color:var(--rose);color:var(--white);}
+
+.search-bar{
+  width:100%;padding:12px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;color:var(--white);
+  font-family:'Jost',sans-serif;font-size:14px;outline:none;margin-bottom:20px;
+}
+.search-bar::placeholder{color:var(--muted);}
+.search-bar:focus{border-color:var(--blush);}
+
+/* ── ORDER TABLE ── */
+.orders-list{display:grid;gap:12px;}
+
+.order-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:6px;padding:20px 24px;
+  transition:border-color 0.2s;
+}
+.order-card:hover{border-color:rgba(201,160,154,0.3);}
+
+.order-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;}
+.order-num{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:3px;color:var(--blush);}
+.order-meta{font-size:13px;color:var(--muted);margin-top:2px;}
+.order-body{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-bottom:16px;}
+@media(max-width:560px){.order-body{grid-template-columns:1fr;}}
+.order-field span:first-child{color:var(--muted);display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
+.order-field span:last-child{color:var(--white);}
+
+.order-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+
+.status-select{
+  background:var(--surface);border:1px solid var(--border);color:var(--white);
+  font-family:'Jost',sans-serif;font-size:12px;padding:7px 12px;border-radius:4px;
+  outline:none;cursor:pointer;
+}
+
+.act-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;padding:7px 14px;border-radius:4px;transition:all 0.2s;
+}
+.act-btn:hover{border-color:var(--blush);color:var(--blush);}
+.act-btn.save{background:var(--rose);border-color:var(--rose);color:var(--white);}
+.act-btn.save:hover{background:#8a5450;}
+.act-btn.review{background:var(--green);border-color:var(--green);color:var(--white);}
+.act-btn.review:hover{background:#5a8968;}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;}
+.b-pending{background:rgba(201,160,64,0.15);color:var(--amber);border:1px solid var(--amber);}
+.b-confirmed{background:rgba(107,158,122,0.15);color:var(--green);border:1px solid var(--green);}
+.b-ready{background:rgba(107,142,160,0.15);color:var(--blue);border:1px solid var(--blue);}
+.b-delivered{background:rgba(201,160,154,0.15);color:var(--blush);border:1px solid var(--blush);}
+.b-cancelled{background:rgba(180,80,80,0.15);color:#e07070;border:1px solid #e07070;}
+.b-rush{background:rgba(201,160,64,0.1);color:var(--amber);border:1px solid rgba(201,160,64,0.4);margin-left:6px;}
+
+/* ── CALENDAR BLOCK ── */
+.blocked-section{margin-top:0;}
+.blocked-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.blocked-chip{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(201,80,80,0.1);border:1px solid rgba(200,80,80,0.3);
+  border-radius:4px;padding:8px 14px;font-size:13px;color:#e09090;
+}
+.remove-date{
+  background:none;border:none;color:#e07070;cursor:pointer;font-size:16px;
+  padding:0;line-height:1;transition:color 0.2s;
+}
+.remove-date:hover{color:#ff6060;}
+
+.block-input-row{display:flex;gap:10px;align-items:center;margin-top:16px;}
+.block-input-row input{
+  flex:1;padding:11px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;color:var(--white);font-family:'Jost',sans-serif;font-size:14px;outline:none;
+}
+.block-input-row input:focus{border-color:var(--blush);}
+.block-add-btn{
+  background:var(--rose);border:none;color:var(--white);
+  font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;padding:11px 20px;border-radius:4px;font-weight:600;white-space:nowrap;
+}
+
+/* ── EMPTY ── */
+.empty{
+  text-align:center;padding:60px 24px;color:var(--muted);
+  font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;
+}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:999;
+  background:var(--green);color:white;padding:14px 24px;border-radius:6px;
+  font-size:13px;font-weight:500;opacity:0;transition:opacity 0.3s;pointer-events:none;
+}
+.toast.show{opacity:1;}
+
+/* ── REVIEWS ADMIN ── */
+.review-admin-card{
+  background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px 24px;
+  margin-bottom:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+}
+.review-admin-card .stars{color:var(--gold);font-size:14px;margin-bottom:6px;}
+.review-admin-card .text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(255,255,255,0.8);margin-bottom:6px;}
+.review-admin-card .author{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--blush);}
+.del-review{background:none;border:1px solid rgba(200,80,80,0.3);color:#e07070;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;padding:6px 12px;border-radius:4px;white-space:nowrap;}
+.del-review:hover{background:rgba(200,80,80,0.15);}
+</style>
+</head>
+<body>
+
+<!-- ── GATE ── -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">Velvet Crumb</div>
+    <div class="gate-sub">Admin Dashboard</div>
+    <input type="password" id="gate-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkGate()">
+    <button class="gate-btn" onclick="checkGate()">Enter Dashboard →</button>
+    <div class="gate-err" id="gate-err">Incorrect password. Try again.</div>
+    <div style="margin-top:20px;font-size:11px;color:rgba(255,255,255,0.2);">
+      Access this page at: yoursite.com/admin.html
+    </div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <nav>
+    <div class="nav-brand">Velvet Crumb</div>
+    <div class="nav-right">
+      <button class="nav-tab active" onclick="switchTab('orders',this)">Orders</button>
+      <button class="nav-tab" onclick="switchTab('calendar',this)">Availability</button>
+      <button class="nav-tab" onclick="switchTab('reviews',this)">Reviews</button>
+      <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="stat-total">0</div><div class="stat-label">Total Orders</div></div>
+      <div class="stat"><div class="stat-val" id="stat-pending">0</div><div class="stat-label">Pending Deposit</div></div>
+      <div class="stat"><div class="stat-val" id="stat-confirmed">0</div><div class="stat-label">Confirmed</div></div>
+      <div class="stat"><div class="stat-val" id="stat-today">0</div><div class="stat-label">Pickup Today</div></div>
+    </div>
+
+    <!-- ── ORDERS PANEL ── -->
+    <div class="panel active" id="panel-orders">
+      <div class="panel-title">All Orders</div>
+      <input class="search-bar" type="text" id="search" placeholder="Search by name, phone, or order number…" oninput="renderOrders()">
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('Pending Deposit',this)">Pending</button>
+        <button class="filter-btn" onclick="setFilter('Confirmed',this)">Confirmed</button>
+        <button class="filter-btn" onclick="setFilter('Ready',this)">Ready</button>
+        <button class="filter-btn" onclick="setFilter('Delivered',this)">Delivered</button>
+        <button class="filter-btn" onclick="setFilter('Cancelled',this)">Cancelled</button>
+      </div>
+      <div class="orders-list" id="orders-list"></div>
+    </div>
+
+    <!-- ── CALENDAR PANEL ── -->
+    <div class="panel" id="panel-calendar">
+      <div class="panel-title">Manage Availability</div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:28px;">
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:20px;">
+          Block specific dates so customers cannot select them when placing an order. Blocked dates will show as unavailable on the ordering page.<br><br>
+          <strong style="color:rgba(255,255,255,0.7);">Note:</strong> Weekdays are automatically restricted to morning pickup only. Weekends allow flexible times.
+        </p>
+        <div class="block-input-row">
+          <input type="date" id="block-date-input">
+          <button class="block-add-btn" onclick="addBlockedDate()">Block Date</button>
+        </div>
+        <div class="blocked-grid" id="blocked-grid"></div>
+      </div>
+    </div>
+
+    <!-- ── REVIEWS PANEL ── -->
+    <div class="panel" id="panel-reviews">
+      <div class="panel-title">Customer Reviews</div>
+      <div id="reviews-admin-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const ADMIN_PASSWORD = 'velvetcrumb2024'; // ← Change this to your own password!
+const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+const EMAILJS_STATUS_TEMPLATE = 'vc_status_update';
+const EMAILJS_REVIEW_TEMPLATE = 'vc_review_request';
+const SITE_URL = 'https://yourusername.github.io/velvet-crumb'; // ← Update with your real URL
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+// ── GATE ──
+function checkGate() {
+  const pw = document.getElementById('gate-pw').value;
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+  } else {
+    document.getElementById('gate-err').style.display = 'block';
+  }
+}
+document.getElementById('gate-pw').addEventListener('keydown', e => { if(e.key==='Enter') checkGate(); });
+
+function logout() {
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('gate-pw').value = '';
+}
+
+// ── TAB SWITCHING ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  if (tab === 'calendar') renderBlocked();
+  if (tab === 'reviews') renderReviewsAdmin();
+}
+
+// ── DATA ──
+function getOrders() { try { return JSON.parse(localStorage.getItem('vc_orders')||'{}'); } catch { return {}; } }
+function saveOrders(o) { localStorage.setItem('vc_orders', JSON.stringify(o)); }
+function getBlocked() { try { return JSON.parse(localStorage.getItem('vc_blocked_dates')||'[]'); } catch { return []; } }
+function saveBlocked(d) { localStorage.setItem('vc_blocked_dates', JSON.stringify(d)); }
+
+// ── LOAD ──
+let currentFilter = 'all';
+
+function loadDashboard() {
+  const orders = getOrders();
+  const arr = Object.values(orders);
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('stat-total').textContent = arr.length;
+  document.getElementById('stat-pending').textContent = arr.filter(o=>o.status==='Pending Deposit').length;
+  document.getElementById('stat-confirmed').textContent = arr.filter(o=>o.status==='Confirmed').length;
+  document.getElementById('stat-today').textContent = arr.filter(o=>o.date===today).length;
+  renderOrders();
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders();
+}
+
+function renderOrders() {
+  const orders = getOrders();
+  const search = (document.getElementById('search').value||'').toLowerCase();
+  let arr = Object.values(orders).sort((a,b)=>new Date(b.created)-new Date(a.created));
+  if (currentFilter !== 'all') arr = arr.filter(o=>o.status===currentFilter);
+  if (search) arr = arr.filter(o=>(o.name+o.phone+o.num+o.email).toLowerCase().includes(search));
+
+  const list = document.getElementById('orders-list');
+  if (!arr.length) { list.innerHTML = '<div class="empty">No orders found</div>'; return; }
+
+  list.innerHTML = arr.map(o => {
+    const badgeClass = {
+      'Pending Deposit':'b-pending','Confirmed':'b-confirmed',
+      'Ready':'b-ready','Delivered':'b-delivered','Cancelled':'b-cancelled'
+    }[o.status]||'b-pending';
+    const fmtDate = d => new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const canReview = o.status === 'Delivered';
+
+    return `
+    <div class="order-card" id="oc-${o.num}">
+      <div class="order-header">
+        <div>
+          <div class="order-num">${o.num}</div>
+          <div class="order-meta">${o.name} · ${o.phone}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span class="badge ${badgeClass}">${o.status}</span>
+          ${o.rush?'<span class="badge b-rush">⚡ Rush</span>':''}
+        </div>
+      </div>
+      <div class="order-body">
+        <div class="order-field"><span>Items</span><span>${o.items}</span></div>
+        <div class="order-field"><span>Total / Deposit</span><span>$${o.total} / $${o.deposit}</span></div>
+        <div class="order-field"><span>Pickup</span><span>${fmtDate(o.date)} · ${o.time}</span></div>
+        <div class="order-field"><span>Fulfilment</span><span>${o.fulfilment}${o.address?' – '+o.address:''}</span></div>
+        ${o.notes?`<div class="order-field" style="grid-column:1/-1;"><span>Notes</span><span>${o.notes}</span></div>`:''}
+        <div class="order-field"><span>Email</span><span>${o.email||'—'}</span></div>
+        <div class="order-field"><span>Ordered</span><span>${new Date(o.created).toLocaleDateString()}</span></div>
+      </div>
+      <div class="order-actions">
+        <select class="status-select" id="sel-${o.num}">
+          <option ${o.status==='Pending Deposit'?'selected':''}>Pending Deposit</option>
+          <option ${o.status==='Confirmed'?'selected':''}>Confirmed</option>
+          <option ${o.status==='Ready'?'selected':''}>Ready</option>
+          <option ${o.status==='Delivered'?'selected':''}>Delivered</option>
+          <option ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+        </select>
+        <button class="act-btn save" onclick="updateStatus('${o.num}')">Update Status</button>
+        ${canReview?`<button class="act-btn review" onclick="sendReviewLink('${o.num}')">Send Review Link</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function updateStatus(num) {
+  const orders = getOrders();
+  const o = orders[num];
+  if (!o) return;
+  const newStatus = document.getElementById('sel-'+num).value;
+  const oldStatus = o.status;
+  orders[num].status = newStatus;
+  saveOrders(orders);
+
+  // Send email notification
+  if (o.email) {
+    const msgs = {
+      'Confirmed': '🎉 Great news! Your deposit has been received and your order is confirmed. We\'ll be baking overnight for you!',
+      'Ready': '✅ Your Velvet Crumb order is ready! Please collect at your agreed time.',
+      'Delivered': '💕 Your order has been delivered. We hope you love every bite!',
+      'Cancelled': 'Your Velvet Crumb order has been cancelled. Please contact us at 242-823-1178 if you have questions.'
+    };
+    const msg = msgs[newStatus] || `Your order status has been updated to: ${newStatus}`;
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_STATUS_TEMPLATE, {
+        order_num: num, customer_name: o.name, customer_email: o.email,
+        status: newStatus, message: msg,
+        pickup_date: o.date, pickup_time: o.time
+      });
+    } catch(e) { console.warn('EmailJS:', e); }
+  }
+
+  // Auto send review link after delivery
+  if (newStatus === 'Delivered' && o.email) {
+    setTimeout(() => sendReviewLink(num), 500);
+  }
+
+  showToast(`✓ Order ${num} updated to "${newStatus}"`);
+  loadDashboard();
+}
+
+async function sendReviewLink(num) {
+  const orders = getOrders();
+  const o = orders[num];
+  if (!o || !o.email) { showToast('No email on file for this order.'); return; }
+  const reviewUrl = `${SITE_URL}/index.html?review=1&order=${num}`;
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_REVIEW_TEMPLATE, {
+      customer_name: o.name, customer_email: o.email,
+      order_num: num, review_link: reviewUrl
+    });
+    showToast('✓ Review link sent to ' + o.email);
+  } catch(e) {
+    console.warn('EmailJS:', e);
+    showToast('Review link ready (EmailJS not configured yet)');
+  }
+}
+
+// ── BLOCKED DATES ──
+function renderBlocked() {
+  const blocked = getBlocked();
+  const grid = document.getElementById('blocked-grid');
+  if (!blocked.length) {
+    grid.innerHTML = '<p style="color:rgba(255,255,255,0.3);font-size:13px;margin-top:16px;">No dates blocked yet.</p>';
+    return;
+  }
+  grid.innerHTML = blocked.sort().map(d => {
+    const fmt = new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+    return `<div class="blocked-chip">${fmt}<button class="remove-date" onclick="removeDate('${d}')">×</button></div>`;
+  }).join('');
+}
+
+function addBlockedDate() {
+  const val = document.getElementById('block-date-input').value;
+  if (!val) return;
+  const blocked = getBlocked();
+  if (!blocked.includes(val)) { blocked.push(val); saveBlocked(blocked); }
+  document.getElementById('block-date-input').value = '';
+  renderBlocked();
+  showToast('✓ Date blocked');
+}
+
+function removeDate(d) {
+  const blocked = getBlocked().filter(x => x !== d);
+  saveBlocked(blocked);
+  renderBlocked();
+  showToast('✓ Date unblocked');
+}
+
+// ── REVIEWS ADMIN ──
+const seedReviews = [
+  {stars:5,text:"Absolutely divine. The Guava Silk rolls are a religious experience.",author:"Tasha M.",seed:true},
+  {stars:5,text:"Perfect for our Sunday brunch. Everyone was obsessed — ordered two pans!",author:"Kezia R.",seed:true},
+  {stars:5,text:"The Coconut Cloud is unreal. Soft, fluffy, and that glaze…",author:"Monique T.",seed:true},
+];
+
+function renderReviewsAdmin() {
+  const stored = JSON.parse(localStorage.getItem('vc_reviews')||'[]');
+  const all = [...seedReviews, ...stored.map((r,i)=>({...r,idx:i}))];
+  const list = document.getElementById('reviews-admin-list');
+  if (!all.length) { list.innerHTML = '<div class="empty">No reviews yet</div>'; return; }
+  list.innerHTML = all.map((r,i) => `
+    <div class="review-admin-card">
+      <div>
+        <div class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+        <div class="text">"${r.text}"</div>
+        <div class="author">— ${r.author}</div>
+      </div>
+      ${!r.seed?`<button class="del-review" onclick="deleteReview(${r.idx})">Remove</button>`:'<span style="font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:1px;text-transform:uppercase;">Pinned</span>'}
+    </div>`).join('');
+}
+
+function deleteReview(idx) {
+  const reviews = JSON.parse(localStorage.getItem('vc_reviews')||'[]');
+  reviews.splice(idx,1);
+  localStorage.setItem('vc_reviews', JSON.stringify(reviews));
+  renderReviewsAdmin();
+  showToast('✓ Review removed');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Min date for block input
+document.getElementById('block-date-input').min = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
