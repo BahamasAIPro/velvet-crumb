@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velvet Crumb – Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf5ef;
+    --blush: #c9a0a0;
+    --rose: #b07070;
+    --dark: #2c1f1f;
+    --muted: #7a5c5c;
+    --white: #ffffff;
+    --border: #e8d8d0;
+    --success: #6b9e7a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Lato', sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    padding: 28px 20px 20px;
+  }
+
+  .logo-circle {
+    width: 90px; height: 90px;
+    background: #f0e0dc;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: 0.5px;
+    text-align: center;
+    line-height: 1.3;
+    border: 2px solid var(--blush);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--dark);
+    letter-spacing: 1px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 300;
+    margin-top: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ─── MAIN ─── */
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--dark);
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  /* ─── FORM ─── */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    color: var(--dark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--blush);
+    background: var(--white);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  /* ─── MENU ─── */
+  .menu-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .menu-item {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: var(--cream);
+  }
+
+  .menu-item:hover { border-color: var(--blush); }
+  .menu-item.selected { border-color: var(--rose); background: #fdf0ee; }
+
+  .menu-item-info { flex: 1; }
+  .menu-item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--dark);
+  }
+  .menu-item-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .menu-item-price {
+    font-weight: 700;
+    color: var(--rose);
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .qty-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--blush);
+    background: var(--white);
+    color: var(--rose);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    font-family: 'Lato', sans-serif;
+    line-height: 1;
+  }
+
+  .qty-btn:hover { background: #fce8e4; }
+  .qty-num { font-weight: 700; font-size: 16px; min-width: 20px; text-align: center; }
+
+  /* ─── SECTION LABEL ─── */
+  .menu-section-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blush);
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+
+  /* ─── ORDER SUMMARY ─── */
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-total {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--rose);
+    padding-top: 8px;
+  }
+
+  /* ─── ALERT ─── */
+  .alert {
+    background: #fdf0ee;
+    border-left: 4px solid var(--rose);
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--dark);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .alert strong { color: var(--rose); }
+
+  /* ─── BUTTON ─── */
+  .btn-primary {
+    width: 100%;
+    background: var(--rose);
+    color: var(--white);
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { background: #9a5f5f; }
+  .btn-primary:active { transform: scale(0.99); }
+  .btn-primary:disabled { background: var(--blush); cursor: not-allowed; }
+
+  /* ─── CONFIRMATION PAGE ─── */
+  #confirmation { display: none; }
+
+  .confirm-icon {
+    width: 70px; height: 70px;
+    background: #edf6f0;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+  }
+
+  .order-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--rose);
+    letter-spacing: 4px;
+    text-align: center;
+    margin: 12px 0;
+  }
+
+  .status-badge {
+    display: inline-block;
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .info-block {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .info-block .row { display: flex; justify-content: space-between; }
+  .info-block .row span:first-child { color: var(--muted); }
+  .info-block .row span:last-child { font-weight: 600; text-align: right; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  .contact-box {
+    background: #fdf0ee;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .contact-box .phone {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--rose);
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* ─── STATUS CHECKER ─── */
+  #status-section {
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+  }
+
+  .status-result {
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 12px;
+    display: none;
+  }
+  .status-result.found { background: #edf6f0; border: 1px solid #6b9e7a; }
+  .status-result.not-found { background: #fdf0ee; border: 1px solid var(--blush); }
+
+  /* ─── RUSH WARNING ─── */
+  .rush-warning {
+    background: #fff8e1;
+    border: 1px solid #f0c040;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #7a5a00;
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* ─── MODIFY SECTION ─── */
+  .modify-link {
+    background: none;
+    border: none;
+    color: var(--rose);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Lato', sans-serif;
+    padding: 0;
+  }
+
+  .error-msg {
+    color: #c0392b;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px 16px; }
+    header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-circle">🎂<br>Velvet<br>Crumb</div>
+  <h1>Velvet Crumb</h1>
+  <p>Artisan Cinnamon Rolls — Nassau, Bahamas</p>
+</header>
+
+<main>
+
+  <!-- ═══ ORDER FORM ═══ -->
+  <div id="order-form">
+
+    <div class="alert">
+      <strong>📋 How to Order:</strong> Select your items below, choose a pickup date (48 hours minimum notice required), and submit your order. A <strong>50% deposit</strong> is required to confirm. Contact us at <strong>242-823-1178</strong> to arrange payment. Delivery available for <strong>$5</strong>.
+    </div>
+
+    <!-- Customer Info -->
+    <div class="card">
+      <h2 class="section-title">Your Details</h2>
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="cust-name" placeholder="e.g. Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="cust-phone" placeholder="e.g. 242-555-0100">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="cust-email" placeholder="Optional – for order updates">
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="card">
+      <h2 class="section-title">Your Order</h2>
+
+      <div class="menu-section-label">Classic Rolls</div>
+      <div class="menu-grid" id="menu-classic"></div>
+
+      <div class="menu-section-label">Jumbo Rolls</div>
+      <div class="menu-grid" id="menu-jumbo"></div>
+
+      <div class="menu-section-label">Collections (12 rolls)</div>
+      <div class="menu-grid" id="menu-collections"></div>
+    </div>
+
+    <!-- Pickup Details -->
+    <div class="card">
+      <h2 class="section-title">Pickup Details</h2>
+      <div class="form-group">
+        <label>Requested Pickup Date *</label>
+        <input type="date" id="pickup-date">
+        <p class="hint">Must be at least 48 hours from today.</p>
+        <div class="rush-warning" id="rush-warning">
+          ⚡ <strong>Rush Order:</strong> Dates within 48 hours incur a <strong>$10 rush fee</strong>. We'll confirm availability when you contact us.
+        </div>
+        <div class="error-msg" id="date-error">Please select a valid pickup date.</div>
+      </div>
+      <div class="form-group">
+        <label>Preferred Pickup Time *</label>
+        <select id="pickup-time">
+          <option value="">Select a time</option>
+          <option>Morning (8am – 11am)</option>
+          <option>Midday (11am – 2pm)</option>
+          <option>Afternoon (2pm – 5pm)</option>
+          <option>Evening (5pm – 7pm)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Delivery?</label>
+        <select id="delivery">
+          <option value="no">No – I'll pick up</option>
+          <option value="yes">Yes – Delivery (+$5)</option>
+        </select>
+      </div>
+      <div class="form-group" id="delivery-address-group" style="display:none">
+        <label>Delivery Address *</label>
+        <input type="text" id="delivery-address" placeholder="Street address, area">
+      </div>
+      <div class="form-group">
+        <label>Special Requests / Allergies</label>
+        <textarea id="special-requests" placeholder="Any special notes for your order…"></textarea>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="card" id="summary-card" style="display:none">
+      <h2 class="section-title">Order Summary</h2>
+      <div id="summary-lines"></div>
+    </div>
+
+    <div class="error-msg" id="form-error" style="display:block; font-size:14px; margin-bottom:12px; text-align:center;"></div>
+    <button class="btn-primary" onclick="submitOrder()">Place My Order →</button>
+
+  </div><!-- /#order-form -->
+
+
+  <!-- ═══ CONFIRMATION PAGE ═══ -->
+  <div id="confirmation">
+    <div class="card" style="text-align:center">
+      <div class="confirm-icon">🎉</div>
+      <h2 class="section-title" style="text-align:center; border:none;">Order Received!</h2>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:10px;">Your order number is</p>
+      <div class="order-num" id="conf-order-num"></div>
+      <span class="status-badge">Pending Deposit</span>
+      <p style="color:var(--muted); font-size:13px; margin-top:14px; line-height:1.6;">
+        Your order is <strong>not confirmed</strong> until your 50% deposit is received. Please contact us to arrange payment.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Order Details</h2>
+      <div class="info-block" id="conf-details"></div>
+
+      <hr class="divider">
+
+      <div class="contact-box">
+        <strong>Pay Your Deposit to Confirm</strong>
+        <span class="phone">📞 242-823-1178</span>
+        <p style="margin-top:8px; font-size:13px; color:var(--muted);">Call or WhatsApp us. Quote your order number above.</p>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size:13px; color:var(--muted); line-height:1.7;">
+        ✏️ <strong>Need to make changes?</strong> You may modify your order up to <strong>12 hours before</strong> your pickup date and time. Contact us at 242-823-1178 with your order number.<br><br>
+        🚗 <strong>Delivery:</strong> Available for $5 within our delivery area.<br><br>
+        ⏰ <strong>Cancellations:</strong> Please give us as much notice as possible if you need to cancel.
+      </p>
+    </div>
+
+    <button class="btn-primary" onclick="startNew()" style="background:var(--muted); margin-bottom:12px;">Place Another Order</button>
+  </div><!-- /#confirmation -->
+
+
+  <!-- ═══ ORDER STATUS CHECKER ═══ -->
+  <div id="status-section">
+    <h2 class="section-title">Check Order Status</h2>
+    <div class="card">
+      <div class="form-group">
+        <label>Your Order Number</label>
+        <input type="text" id="status-input" placeholder="e.g. VC-2024-1234" style="letter-spacing:2px;">
+      </div>
+      <button class="btn-primary" onclick="checkStatus()" style="background:var(--dark);">Check Status</button>
+      <div class="status-result" id="status-result"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ─── MENU DATA ───
+const menuItems = {
+  classic: [
+    { id: 'c1', name: 'Velvet Classic', desc: 'Cinnamon', price: 25 },
+    { id: 'c2', name: 'Guava Silk', desc: 'Guava-filled', price: 30 },
+    { id: 'c3', name: 'Coconut Cloud', desc: 'Coconut-filled', price: 30 },
+  ],
+  jumbo: [
+    { id: 'j1', name: 'Velvet Classic', desc: 'Cinnamon – Jumbo', price: 50 },
+    { id: 'j2', name: 'Guava Silk', desc: 'Guava-filled – Jumbo', price: 60 },
+    { id: 'j3', name: 'Coconut Cloud', desc: 'Coconut-filled – Jumbo', price: 60 },
+  ],
+  collections: [
+    { id: 'col1', name: 'The Velvet Duo', desc: '12 rolls – 2 flavours (6 each)', price: 35 },
+    { id: 'col2', name: 'The Velvet Trio', desc: '12 rolls – all 3 flavours (4 each)', price: 40 },
+  ],
+};
+
+// qty state
+const qtys = {};
+Object.values(menuItems).flat().forEach(i => qtys[i.id] = 0);
+
+function renderMenu(items, containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(item => `
+    <div class="menu-item" id="mi-${item.id}">
+      <div class="menu-item-info">
+        <div class="menu-item-name">${item.name}</div>
+        <div class="menu-item-desc">${item.desc}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="menu-item-price">$${item.price}</span>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
+          <span class="qty-num" id="qty-${item.id}">0</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderMenu(menuItems.classic, 'menu-classic');
+renderMenu(menuItems.jumbo, 'menu-jumbo');
+renderMenu(menuItems.collections, 'menu-collections');
+
+function changeQty(id, delta) {
+  qtys[id] = Math.max(0, qtys[id] + delta);
+  document.getElementById('qty-' + id).textContent = qtys[id];
+  const el = document.getElementById('mi-' + id);
+  el.classList.toggle('selected', qtys[id] > 0);
+  updateSummary();
+}
+
+function getOrderedItems() {
+  return Object.values(menuItems).flat().filter(i => qtys[i.id] > 0);
+}
+
+function updateSummary() {
+  const ordered = getOrderedItems();
+  const summaryCard = document.getElementById('summary-card');
+  if (!ordered.length) { summaryCard.style.display = 'none'; return; }
+  summaryCard.style.display = 'block';
+
+  const delivery = document.getElementById('delivery').value === 'yes' ? 5 : 0;
+  const rush = isRushOrder() ? 10 : 0;
+
+  let subtotal = ordered.reduce((s, i) => s + i.price * qtys[i.id], 0);
+  let total = subtotal + delivery + rush;
+  let deposit = Math.ceil(total * 0.5);
+
+  let html = ordered.map(i => `
+    <div class="summary-row">
+      <span>${i.name} × ${qtys[i.id]}</span>
+      <span>$${i.price * qtys[i.id]}</span>
+    </div>`).join('');
+
+  if (delivery) html += `<div class="summary-row"><span>Delivery</span><span>$5</span></div>`;
+  if (rush) html += `<div class="summary-row"><span>Rush Fee</span><span>$10</span></div>`;
+  html += `<div class="summary-row summary-total"><span>Total</span><span>$${total}</span></div>`;
+  html += `<div class="summary-row" style="color:var(--rose);font-size:13px;"><span>Deposit Required (50%)</span><span>$${deposit}</span></div>`;
+
+  document.getElementById('summary-lines').innerHTML = html;
+}
+
+// Delivery address toggle
+document.getElementById('delivery').addEventListener('change', function() {
+  document.getElementById('delivery-address-group').style.display = this.value === 'yes' ? 'block' : 'none';
+  updateSummary();
+});
+
+// ─── DATE LOGIC ───
+function isRushOrder() {
+  const val = document.getElementById('pickup-date').value;
+  if (!val) return false;
+  const chosen = new Date(val + 'T00:00:00');
+  const cutoff = new Date(Date.now() + 48 * 3600 * 1000);
+  return chosen < cutoff;
+}
+
+document.getElementById('pickup-date').addEventListener('change', function() {
+  const warning = document.getElementById('rush-warning');
+  warning.style.display = isRushOrder() ? 'block' : 'none';
+  updateSummary();
+});
+
+// Set min date to today
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('pickup-date').setAttribute('min', today);
+
+// ─── SUBMIT ───
+function generateOrderNum() {
+  const year = new Date().getFullYear();
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  return `VC-${year}-${rand}`;
+}
+
+function submitOrder() {
+  const name = document.getElementById('cust-name').value.trim();
+  const phone = document.getElementById('cust-phone').value.trim();
+  const date = document.getElementById('pickup-date').value;
+  const time = document.getElementById('pickup-time').value;
+  const errEl = document.getElementById('form-error');
+
+  // Validation
+  if (!name) { errEl.style.display='block'; errEl.textContent='Please enter your name.'; return; }
+  if (!phone) { errEl.style.display='block'; errEl.textContent='Please enter your phone number.'; return; }
+  if (!getOrderedItems().length) { errEl.style.display='block'; errEl.textContent='Please select at least one item.'; return; }
+  if (!date) { errEl.style.display='block'; errEl.textContent='Please select a pickup date.'; return; }
+  if (!time) { errEl.style.display='block'; errEl.textContent='Please select a pickup time.'; return; }
+
+  const delivery = document.getElementById('delivery').value === 'yes';
+  if (delivery && !document.getElementById('delivery-address').value.trim()) {
+    errEl.style.display='block'; errEl.textContent='Please enter your delivery address.'; return;
+  }
+
+  errEl.style.display = 'none';
+
+  // Build confirmation
+  const orderNum = generateOrderNum();
+  const ordered = getOrderedItems();
+  const rush = isRushOrder();
+  const delFee = delivery ? 5 : 0;
+  const rushFee = rush ? 10 : 0;
+  const subtotal = ordered.reduce((s,i)=>s+i.price*qtys[i.id],0);
+  const total = subtotal + delFee + rushFee;
+  const deposit = Math.ceil(total * 0.5);
+
+  const fmt = (d) => new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  const items = ordered.map(i=>`${i.name} × ${qtys[i.id]} — $${i.price*qtys[i.id]}`).join('<br>');
+
+  document.getElementById('conf-order-num').textContent = orderNum;
+  document.getElementById('conf-details').innerHTML = `
+    <div class="row"><span>Name</span><span>${name}</span></div>
+    <div class="row"><span>Phone</span><span>${phone}</span></div>
+    <div class="row" style="margin-top:12px;"><span>Items</span><span style="text-align:right">${items}</span></div>
+    ${delFee ? `<div class="row"><span>Delivery</span><span>$5</span></div>` : ''}
+    ${rushFee ? `<div class="row"><span>Rush Fee ⚡</span><span>$10</span></div>` : ''}
+    <div class="row" style="font-weight:700;margin-top:8px;"><span>Total</span><span>$${total}</span></div>
+    <div class="row" style="color:var(--rose);"><span>Deposit Due</span><span>$${deposit}</span></div>
+    <div class="row" style="margin-top:12px;"><span>Pickup Date</span><span>${fmt(date)}</span></div>
+    <div class="row"><span>Pickup Time</span><span>${time}</span></div>
+    <div class="row"><span>Fulfilment</span><span>${delivery ? 'Delivery' : 'Pickup'}</span></div>
+    ${delivery ? `<div class="row"><span>Address</span><span>${document.getElementById('delivery-address').value}</span></div>` : ''}
+    ${rush ? `<div class="row" style="color:#856404;"><span>Rush Order</span><span>⚡ Yes</span></div>` : ''}
+  `;
+
+  // Store in sessionStorage for status check
+  const orders = JSON.parse(sessionStorage.getItem('vc_orders') || '{}');
+  orders[orderNum] = {
+    name, phone, date, time, total, deposit,
+    delivery: delivery ? 'Delivery' : 'Pickup',
+    items: ordered.map(i=>`${i.name} ×${qtys[i.id]}`).join(', '),
+    status: 'Pending Deposit',
+    rush,
+    created: new Date().toISOString()
+  };
+  sessionStorage.setItem('vc_orders', JSON.stringify(orders));
+
+  document.getElementById('order-form').style.display = 'none';
+  document.getElementById('confirmation').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function startNew() {
+  document.getElementById('order-form').style.display = 'block';
+  document.getElementById('confirmation').style.display = 'none';
+  // Reset form
+  document.getElementById('cust-name').value='';
+  document.getElementById('cust-phone').value='';
+  document.getElementById('cust-email').value='';
+  document.getElementById('pickup-date').value='';
+  document.getElementById('pickup-time').value='';
+  document.getElementById('delivery').value='no';
+  document.getElementById('special-requests').value='';
+  document.getElementById('delivery-address-group').style.display='none';
+  document.getElementById('rush-warning').style.display='none';
+  document.getElementById('summary-card').style.display='none';
+  Object.keys(qtys).forEach(k => {
+    qtys[k]=0;
+    const el = document.getElementById('qty-'+k);
+    if(el) el.textContent='0';
+    const mi = document.getElementById('mi-'+k);
+    if(mi) mi.classList.remove('selected');
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ─── STATUS CHECKER ───
+function checkStatus() {
+  const input = document.getElementById('status-input').value.trim().toUpperCase();
+  const resultEl = document.getElementById('status-result');
+  const orders = JSON.parse(sessionStorage.getItem('vc_orders') || '{}');
+
+  if (orders[input]) {
+    const o = orders[input];
+    const fmt = (d) => new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    resultEl.className = 'status-result found';
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = `
+      <strong>Order ${input}</strong><br>
+      <span style="color:var(--muted)">Name:</span> ${o.name}<br>
+      <span style="color:var(--muted)">Items:</span> ${o.items}<br>
+      <span style="color:var(--muted)">Pickup:</span> ${fmt(o.date)} — ${o.time}<br>
+      <span style="color:var(--muted)">Total:</span> $${o.total} &nbsp;|&nbsp; <span style="color:var(--muted)">Deposit:</span> $${o.deposit}<br>
+      <span style="color:var(--muted)">Status:</span> <strong style="color:#856404">${o.status}</strong><br><br>
+      <em style="font-size:12px;">To modify, contact 242-823-1178 at least 12 hours before your pickup time.</em>
+    `;
+  } else {
+    resultEl.className = 'status-result not-found';
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = `<strong>Order not found.</strong> Please double-check your order number or contact us at <strong>242-823-1178</strong>.`;
+  }
+}
+
+// Allow Enter key in status input
+document.getElementById('status-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkStatus();
+});
+</script>
+</body>
+</html>
